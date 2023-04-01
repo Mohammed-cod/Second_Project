@@ -19,6 +19,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/** Called for forward and backward */
+	void MoveForward(float Value);
+
+	/** Called side to side input */ 
+	void MoveRight(float Value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,9 +43,9 @@ private:
 
 public:
 	/** Return CameraBoom Subobject */
-	FORCEINLINE USpringArmComponent* GetCameraBoom() const {return CameraBoom;};
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
 
 	/** Return FollowCamera Subobject */
-	FORCEINLINE UCameraComponent* GetFollowCamera() const {return FollowCamera;};
+	FORCEINLINE UCameraComponent* GetFollowCamera() const {return FollowCamera;}
 
 };
