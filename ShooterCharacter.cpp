@@ -16,7 +16,9 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 											BaseLookUpRate(45.f), 
 											bAiming(false), 
 											CameraDefaultFOV(0.f), // Set in BeginPlay 
-											CameraZoomedFOV(60.f)
+											CameraZoomedFOV(35.f),
+											CameraCurrentFOV(0.f),
+											ZoomInterpSpeed(20.f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,9 +26,9 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 	//Create a CameraBoom(pulls in towards the character if there is a collision) 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CamraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.f; //The camera follows at this distatnce behind the character
+	CameraBoom->TargetArmLength = 180.f; //The camera follows at this distatnce behind the character
 	CameraBoom->bUsePawnControlRotation = true;//Rotate the arm based in the controller. Whenever our pawn controller move, the spring arm is going to use that rotation 
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);//Attach camera to the end of boom
@@ -50,7 +52,8 @@ void AShooterCharacter::BeginPlay()
 	
 	if (FollowCamera)
 	{
-		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = GetFollowCamera()->FieldOfView;
+		CameraDefaultFOV = CameraCurrentFOV;
 	}
 }
 
@@ -219,13 +222,11 @@ bool AShooterCharacter::GetBeamEndLocation( const FVector& MuzzleSocketLocation,
 void AShooterCharacter::AimingButtonPressed()
 {
 	bAiming = true;
-	GetFollowCamera()->SetFieldOfView(CameraZoomedFOV);
 }
 
 void AShooterCharacter::AimingButtonReleased()
 {
 	bAiming = false;
-	GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
 }
 
 // Called every frame
@@ -233,7 +234,20 @@ void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Set current camera field of view 
+	if (bAiming)
+	{
+		//Interpolate to zoomed FOV
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraZoomedFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	else
+	{
+		//Interpolate to default FOV
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraDefaultFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
 }
+
 // Called to bind functionality to input
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
