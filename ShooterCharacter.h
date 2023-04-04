@@ -116,4 +116,7 @@ public:
 	/** Return FollowCamera Subobject */
 	FORCEINLINE UCameraComponent* GetFollowCamera() const {return FollowCamera;}
 
+	/** Return Aiming Subobject */
+	FORCEINLINE bool GetAiming() const {return bAiming;}
+
 };
