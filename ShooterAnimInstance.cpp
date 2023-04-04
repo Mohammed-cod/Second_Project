@@ -37,8 +37,11 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
         FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(ShooterCharacter->GetVelocity());
 
         MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;//we wil access this in the animation blueprint 
- 
-       
+
+        if (ShooterCharacter->GetVelocity().Size() > 0.f)
+        {
+            LastMovementOffsetYaw = MovementOffsetYaw;
+        }
     }
 }
 
