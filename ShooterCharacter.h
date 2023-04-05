@@ -189,3 +189,5 @@ public:
 	float GetCrossHairSpreadMultiplier() const;
 
 };
+
+

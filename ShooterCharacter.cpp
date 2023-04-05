@@ -13,24 +13,35 @@
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f), 
-											BaseLookUpRate(45.f),  
+											BaseLookUpRate(45.f),
+
 											//Turn rate for aiming/not aimin
 											HipTurnRate(90.f),
 											HipLookUpRate(90.f),
 											AimingTurnRate(20.f),
 											AimingLookUpRate(20.f),
+
 											//Mouse look sensitivity scale factors
 											MouseHipTurnRate(1.f),
 											MouseHipLookUpRate(1.f),
 											MouseAimingTurnRate(0.2f),
 											MouseAimingLookUpRate(0.2f),
+
 											//True when aiming the weapon
 											bAiming(false),
+
 											//Camera field of view values
 											CameraDefaultFOV(0.f), // Set in BeginPlay 
 											CameraZoomedFOV(35.f),
 											CameraCurrentFOV(0.f),
-											ZoomInterpSpeed(20.f)
+											ZoomInterpSpeed(20.f),
+
+											//Crosshair spread factors
+											CrossHairSpreadMultiplier(0.f),
+											CrosshairVelocityFactor(0.f),
+											CrosshairInAirFactor(0.f),
+											CrosshairAimFactor(0.f),
+											CrosshairShootingFactor(0.f)
 											
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -301,16 +312,40 @@ void AShooterCharacter::SetLookRates()
 }
 
 void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
-{
+{	
+	//Calculate crosshair velocity factor
 	FVector2D WalkSpeedRange{0.f, 600.f};
 	FVector2D VelocityMultiplierRange{0., 1.f};
 	FVector Velocity{GetVelocity()};
-	
 	Velocity.Z = 0.f;
 
 	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(WalkSpeedRange, VelocityMultiplierRange, Velocity.Size());
 
-	CrossHairSpreadMultiplier = 0.5f + CrosshairVelocityFactor + CrosshairInAirFactor;
+	//Calculate crosshair in air factor
+	if (GetCharacterMovement()->IsFalling())// Is in air?
+	{
+		//Spread the crosshairs slowly while in air
+		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 2.25f, DeltaTime, 2.25f);
+	}
+	else//Character is on the ground
+	{
+		//Shrink the crosshairs rapidly while on the ground
+		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
+	}
+
+	//Calculate crosshair aim factor
+	if (bAiming)//Are we aiming?
+	{
+		//Shrink crosshairs a small amount very quickly
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.6f, DeltaTime, 30.f);
+	}
+	else//Not aiming
+	{
+		//Spread crosshairs back to normal very quickly
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
+	}
+	
+	CrossHairSpreadMultiplier = 0.5f + /*  *  */CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor;
 }
 
 // Called every frame
