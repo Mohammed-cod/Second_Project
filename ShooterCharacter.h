@@ -96,6 +96,9 @@ protected:
 	void SelectButtonPressed();
 	void SelectButtonReleased();
 
+	/** Drops currently equipped Weapon and Equips TraceHitItem */
+	void SwapWeapon(AWeapon* WeaponToSwap);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -239,6 +242,9 @@ private:
 	bool bFiringBullet;
 	FTimerHandle CrosshairShootTimer;
 
+	/** The item currently hit by our trace in TraceForItems (could be null) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	AItem* TraceHitItem;
 
 public:
 	/** Return CameraBoom Subobject */
