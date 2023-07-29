@@ -18,7 +18,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateAnimationProperties(float DeltaTime);//more like a Tick func 
 
-	virtual void NativeInitializeAnimation() override;
+	virtual void NativeInitializeAnimation() override;//more like BeginPlay() function
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
