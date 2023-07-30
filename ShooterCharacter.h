@@ -346,6 +346,8 @@ public:
 
 	void GetPickupItem(AItem* Item);//checks if the item is weapon 
 
+	FORCEINLINE ECombatState GetCombatState() const { return CombatState; }
+
 };
 
 

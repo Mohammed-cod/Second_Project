@@ -17,7 +17,9 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	CharacterYawLastFrame(0.f),
 	RootYawOffset(0.f),
 	RotationCurve(0.f),
-	RotationCurveLastFrame(0.f)
+	RotationCurveLastFrame(0.f),
+	Pitch(0.f),
+	bReloading(false)
 {
 
 }
@@ -30,6 +32,8 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
     }
     if (ShooterCharacter)
     {
+		bReloading = ShooterCharacter->GetCombatState() == ECombatState::ECS_Reloading;
+		
         //Get the laterral speed of the character from velocity
         FVector Velocity{ShooterCharacter->GetVelocity()};
         Velocity.Z = 0;
@@ -71,6 +75,9 @@ void UShooterAnimInstance::NativeInitializeAnimation()
 void UShooterAnimInstance::TurnInPlace()
 {
 	if (ShooterCharacter == nullptr) return;
+
+	Pitch = ShooterCharacter->GetBaseAimRotation().Pitch;
+
 	if (Speed > 0)
 	{
 		// Don't want to turn in place; Character is moving
