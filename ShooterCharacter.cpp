@@ -590,7 +590,7 @@ void AShooterCharacter::ReloadWeapon()
 	if (EquippedWeapon == nullptr) return;
 
 	// Do we have ammo of the correct type?
-	if (CarryingAmmo()) 
+	if (CarryingAmmo() && !EquippedWeapon->ClipIsFull()) 
 	{
 		CombatState = ECombatState::ECS_Reloading;//stop fire while reloading
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
