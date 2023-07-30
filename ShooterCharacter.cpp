@@ -73,7 +73,7 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 	//Create a CameraBoom(pulls in towards the character if there is a collision) 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CamraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 180.f; //The camera follows at this distatnce behind the character
+	CameraBoom->TargetArmLength = 300.f; //The camera follows at this distatnce behind the character
 	CameraBoom->bUsePawnControlRotation = true;//Rotate the arm based in the controller. Whenever our pawn controller move, the spring arm is going to use that rotation 
 	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
