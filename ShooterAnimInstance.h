@@ -6,7 +6,6 @@
 #include "Animation/AnimInstance.h"
 #include "ShooterAnimInstance.generated.h"
 
-
 UENUM(BlueprintType)
 enum class EOffsetState : uint8
 {
@@ -19,7 +18,6 @@ enum class EOffsetState : uint8
 	EOS_MAX UMETA(DisplayName = "DefaultMAX")
 };
 
-
 /**
  * 
  */
@@ -27,14 +25,13 @@ UCLASS()
 class SHOOTER_API UShooterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-
 public:
 	UShooterAnimInstance();
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateAnimationProperties(float DeltaTime);//more like a Tick func 
+	void UpdateAnimationProperties(float DeltaTime);
 
-	virtual void NativeInitializeAnimation() override;//more like BeginPlay() function
+	virtual void NativeInitializeAnimation() override;
 
 protected:
 
@@ -45,36 +42,36 @@ protected:
 	void Lean(float DeltaTime);
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	class AShooterCharacter* ShooterCharacter;//reference to character
-
-	/**The speed of the character*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	class AShooterCharacter* ShooterCharacter;
+	
+	/** The speed of the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float Speed;
 
-	/**Whether or not the character is in air*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	/** Whether or not the character is in the air */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsInAir;
 
-	/**Whether or not the character is moving*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	/** Whether or not the character is moving */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsAccelerating;
 
-	/**Offset yaw used for strafing*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	/** Offset yaw used for strafing */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float MovementOffsetYaw;
 
-	/**Offset yaw the fram before we stopped moving */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	/** Offset yaw the frame before we stopped moving */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float LastMovementOffsetYaw;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	bool  bAiming;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	bool bAiming;
 
-	/** Yaw of the Character this frame, Only updated when standing still and not in air */
+	/** Yaw of the Character this frame; Only updated when standing still and not in air */
 	float TIPCharacterYaw;
 	
-	/** Yaw of the Character the previous frame, Only updated when standing still and not in air */
+	/** Yaw of the Character the previous frame; Only updated when standing still and not in air */
 	float TIPCharacterYawLastFrame;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"))
@@ -106,5 +103,4 @@ private:
 	/** Yaw delta used for leaning in the running blendspace */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Lean, meta = (AllowPrivateAccess = "true"))
 	float YawDelta;
-	
 };
