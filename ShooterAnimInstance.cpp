@@ -20,7 +20,8 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	RotationCurveLastFrame(0.f),
 	Pitch(0.f),
 	bReloading(false),
-	OffsetState(EOffsetState::EOS_Hip)
+	OffsetState(EOffsetState::EOS_Hip),
+	YawDelta(0.f)
 {
 
 }
