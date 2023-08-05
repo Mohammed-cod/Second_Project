@@ -20,7 +20,9 @@ UShooterAnimInstance::UShooterAnimInstance() :
 	RootYawOffset(0.f),
 	Pitch(0.f),
 	bReloading(false),
-	OffsetState(EOffsetState::EOS_Hip)
+	OffsetState(EOffsetState::EOS_Hip),
+	RecoilWeight(1.0f),
+	bTurningInPlace(false)
 {
 
 }
@@ -124,6 +126,7 @@ void UShooterAnimInstance::TurnInPlace()
 		const float Turning{ GetCurveValue(TEXT("Turning")) };
 		if (Turning > 0)
 		{
+			bTurningInPlace = true;
 			RotationCurveLastFrame = RotationCurve;
 			RotationCurve = GetCurveValue(TEXT("Rotation"));
 			const float DeltaRotation{ RotationCurve - RotationCurveLastFrame };
@@ -138,7 +141,47 @@ void UShooterAnimInstance::TurnInPlace()
 				RootYawOffset > 0 ? RootYawOffset -= YawExcess : RootYawOffset += YawExcess;
 			}
 		}
+		else 
+		{
+			bTurningInPlace = false;
+		}
 
+		if(bTurningInPlace)
+		{
+			if (bReloading)
+			{
+				RecoilWeight = 1.f;
+			}
+			else
+			{
+				RecoilWeight = 0.f;
+			}
+		}
+		else // not turning in place
+		{
+			if(bCrouching)
+			{
+				if(bReloading)
+				{
+					RecoilWeight = 1.f;
+				}
+				else
+				{
+					RecoilWeight = 0.1f;
+				}
+			}
+			else
+			{
+				if (bAiming || bReloading)
+				{
+					RecoilWeight = 1.f;
+				}
+				else
+				{
+					RecoilWeight = 0.5f;
+				}
+			}
+		}
 		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Cyan, FString::Printf(TEXT("RootYawOffset: %f"), RootYawOffset));
 	}
 }
