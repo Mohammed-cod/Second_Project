@@ -144,9 +144,11 @@ void UShooterAnimInstance::TurnInPlace()
 		else 
 		{
 			bTurningInPlace = false;
-		}
-
-		if(bTurningInPlace)
+		}	
+		//if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Cyan, FString::Printf(TEXT("RootYawOffset: %f"), RootYawOffset));
+	}
+	//Set the Recoil Weight
+	if(bTurningInPlace)
 		{
 			if (bReloading)
 			{
@@ -182,8 +184,6 @@ void UShooterAnimInstance::TurnInPlace()
 				}
 			}
 		}
-		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Cyan, FString::Printf(TEXT("RootYawOffset: %f"), RootYawOffset));
-	}
 }
 
 void UShooterAnimInstance::Lean(float DeltaTime)
