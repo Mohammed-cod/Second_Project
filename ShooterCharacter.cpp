@@ -30,15 +30,15 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 											//Mouse look sensitivity scale factors
 											MouseHipTurnRate(1.f),
 											MouseHipLookUpRate(1.f),
-											MouseAimingTurnRate(0.2f),
-											MouseAimingLookUpRate(0.2f),
+											MouseAimingTurnRate(0.6f),
+											MouseAimingLookUpRate(0.6f),
 
 											//True when aiming the weapon
 											bAiming(false),
 
 											//Camera field of view values
 											CameraDefaultFOV(0.f), // Set in BeginPlay 
-											CameraZoomedFOV(35.f),
+											CameraZoomedFOV(25.f),
 											CameraCurrentFOV(0.f),
 											ZoomInterpSpeed(20.f),
 
@@ -83,7 +83,7 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 280.f; //The camera follows at this distatnce behind the character
 	CameraBoom->bUsePawnControlRotation = true;//Rotate the arm based in the controller. Whenever our pawn controller move, the spring arm is going to use that rotation 
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 45.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);//Attach camera to the end of boom
