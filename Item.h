@@ -148,6 +148,7 @@ public:
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
 	void SetItemState(EItemState State);
 	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; };
+	FORCEINLINE int32 GetItemCount() const { return ItemCount; }
 
 	/** Called from the AShooterCharacter class */
 	void StartItemCurve(AShooterCharacter* Char);
