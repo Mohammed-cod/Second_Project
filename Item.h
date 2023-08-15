@@ -81,7 +81,7 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	void EnableGlowMaterial();
-	void DisableGlowMaterial();
+	
 
 public:	
 	// Called every frame
@@ -182,7 +182,7 @@ private:
 	UMaterialInstance* MaterialInstance;
 
 	bool bCanChangeCustomDepth;
-	
+
 public:
 	FORCEINLINE UWidgetComponent* GetPickupWidget() const {return PickupWidget;};
 	FORCEINLINE USphereComponent* GetAreaSphere() const {return AreaSphere;};
@@ -197,4 +197,6 @@ public:
 
 	virtual	void EnableCustomDepth();
 	virtual	void DisableCustomDepth();
+
+	void DisableGlowMaterial();
 };

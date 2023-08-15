@@ -125,7 +125,6 @@ AShooterCharacter::AShooterCharacter() : 	BaseTurnRate(45.f),
 	InterpComp6 = CreateDefaultSubobject<USceneComponent>(TEXT("Interpolation Component 6"));
 	InterpComp6->SetupAttachment(GetFollowCamera());
 }
-
 // Called when the game starts or when spawned
 void AShooterCharacter::BeginPlay()
 {
@@ -138,6 +137,8 @@ void AShooterCharacter::BeginPlay()
 	}
 	// Spawn the default weapon and Equip it 
 	EquipWeapon(SpawnDefaultWeapon());
+	EquippedWeapon->DisableCustomDepth();
+	EquippedWeapon->DisableGlowMaterial();
 
 	InitializeAmmoMap();
 	GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
@@ -819,7 +820,6 @@ int32 AShooterCharacter::GetInterpLocationIndex()
 	}
 	return LowestIndex;
 }
-
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -840,7 +840,6 @@ void AShooterCharacter::Tick(float DeltaTime)
 	// Interpolate the capsule half height based on crouching/standing
 	InterpCapsuleHalfHeight(DeltaTime);
 }
-
 // Called to bind functionality to input
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -931,17 +930,6 @@ void AShooterCharacter::IncrementOverlappedItemCount(int8 Amount)
 		bShouldTraceForItems = true;
 	}
 }
-
-/*no longer needed 
-FVector AShooterCharacter::GetCameraInterpLocation()
-{
-	const FVector CameraWorldLocation{ FollowCamera->GetComponentLocation() };
-	const FVector CameraForward{ FollowCamera->GetForwardVector() };
-	
-	// Desired = CameraWorldLocation + Forward * A + Up * B
-	return CameraWorldLocation + CameraForward * CameraInterpDistance
-		+ FVector(0.f, 0.f, CameraInterpElevation);
-}*/
 
 void AShooterCharacter::GetPickupItem(AItem* Item)
 {
