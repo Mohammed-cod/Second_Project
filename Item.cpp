@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "ShooterCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Curves/CurveVector.h"
 
 // Sets default values
 AItem::AItem() : ItemName(FString("Default")), 
@@ -25,7 +26,12 @@ AItem::AItem() : ItemName(FString("Default")),
 				 ItemType(EItemType::EIT_MAX),
 				 InterpLocIndex(0),
 				 MaterialIndex(0),
-				 bCanChangeCustomDepth(true)
+				 bCanChangeCustomDepth(true),
+				 // Dynamic Material Parameters
+				 GlowAmount(150.f),
+				 FresnelExponent(3.f),
+				 FresnelReflectFraction(4.f),
+				 PulseCurveTime(5.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -66,7 +72,8 @@ void AItem::BeginPlay()
 	SetItemProperties(ItemState);
 
 	InitializeCustomDepth();
-	
+
+	StartPulseTimer();
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -325,6 +332,21 @@ void AItem::EnableGlowMaterial()
 	}
 }
 
+void AItem::UpdatePulse()
+{
+	if (ItemState != EItemState::EIS_Pickup) return;
+
+	const float ElapsedTime{ GetWorldTimerManager().GetTimerElapsed(PulseTimer) };
+	if (PulseCurve)
+	{
+		const FVector CurveValue{ PulseCurve->GetVectorValue(ElapsedTime) };
+
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowAmount"), CurveValue.X * GlowAmount);
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelExponent"), CurveValue.Y * FresnelExponent);
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("FresnelReflectFraction"), CurveValue.Z * FresnelReflectFraction);
+	}
+}
+
 void AItem::DisableGlowMaterial()
 {
 	if (DynamicMaterialInstance)
@@ -332,8 +354,6 @@ void AItem::DisableGlowMaterial()
 		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowBlendAlpha"), 1);
 	}
 }
-
-
 // Called every frame
 void AItem::Tick(float DeltaTime)
 {
@@ -341,6 +361,22 @@ void AItem::Tick(float DeltaTime)
 
 	// Handle Item Interping when in the EquipInterping state
 	ItemInterp(DeltaTime);
+
+	//Get vurve values from PulseCurve and set dynamic material parameters
+	UpdatePulse();
+}
+
+void AItem::ResetPulseTimer()
+{
+	StartPulseTimer();
+}
+
+void AItem::StartPulseTimer()
+{
+	if(ItemState == EItemState::EIS_Pickup)
+	{
+		GetWorldTimerManager().SetTimer(PulseTimer, this, &AItem::ResetPulseTimer, PulseCurveTime);
+	}
 }
 
 void AItem::SetItemState(EItemState State)
