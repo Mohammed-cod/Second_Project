@@ -207,6 +207,9 @@ void AItem::FinishInterping()
 	}
 	// Set scale back to normal
 	SetActorScale3D(FVector(1.f));
+
+	DisableGlowMaterial();
+	DisableCustomDepth();
 }
 
 void AItem::ItemInterp(float DeltaTime)
@@ -303,7 +306,25 @@ void AItem::OnConstruction(const FTransform& Transform)
 		DynamicMaterialInstance = UMaterialInstanceDynamic::Create(MaterialInstance, this);
 		ItemMesh->SetMaterial(MaterialIndex, DynamicMaterialInstance);
 	}
+	EnableGlowMaterial();
 }
+
+void AItem::EnableGlowMaterial()
+{
+	if (DynamicMaterialInstance)
+	{
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowBlendAlpha"), 0);
+	}
+}
+
+void AItem::DisableGlowMaterial()
+{
+	if (DynamicMaterialInstance)
+	{
+		DynamicMaterialInstance->SetScalarParameterValue(TEXT("GlowBlendAlpha"), 1);
+	}
+}
+
 
 // Called every frame
 void AItem::Tick(float DeltaTime)
