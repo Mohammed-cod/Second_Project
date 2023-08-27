@@ -31,7 +31,8 @@ AItem::AItem() : ItemName(FString("Default")),
 				 GlowAmount(150.f),
 				 FresnelExponent(3.f),
 				 FresnelReflectFraction(4.f),
-				 PulseCurveTime(5.f)
+				 PulseCurveTime(5.f),
+				 SlotIndex(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -157,6 +158,7 @@ void AItem::SetItemProperties(EItemState State)
 		CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		break;
+
 	case EItemState::EIS_Equipped:
 		PickupWidget->SetVisibility(false);
 		// Set mesh properties
@@ -172,6 +174,7 @@ void AItem::SetItemProperties(EItemState State)
 		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
+
 	case EItemState::EIS_Falling://Falling item new*
 		// Set mesh properties
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -186,12 +189,29 @@ void AItem::SetItemProperties(EItemState State)
 		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
+
 	case EItemState::EIS_EquipInterping:
 		PickupWidget->SetVisibility(false);
 		// Set mesh properties
 		ItemMesh->SetSimulatePhysics(false);
 		ItemMesh->SetEnableGravity(false);
 		ItemMesh->SetVisibility(true);
+		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		// Set AreaSphere properties
+		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		// Set CollisionBox properties
+		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+
+	case EItemState::EIS_PickedUp:
+		PickupWidget->SetVisibility(false);
+		// Set mesh properties
+		ItemMesh->SetSimulatePhysics(false);
+		ItemMesh->SetEnableGravity(false);
+		ItemMesh->SetVisibility(false);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		// Set AreaSphere properties
