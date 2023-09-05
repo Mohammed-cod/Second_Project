@@ -227,17 +227,22 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
 	int32 SlotIndex;
 
+	/** True when the Character's inventory is full */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+	bool bCharacterInventoryFull;
+
 public:
-	FORCEINLINE UWidgetComponent* GetPickupWidget() const {return PickupWidget;};
-	FORCEINLINE USphereComponent* GetAreaSphere() const {return AreaSphere;};
-	FORCEINLINE UBoxComponent* GetCollisionBox() const {return CollisionBox;};
+	FORCEINLINE UWidgetComponent* GetPickupWidget() const {return PickupWidget;}
+	FORCEINLINE USphereComponent* GetAreaSphere() const {return AreaSphere;}
+	FORCEINLINE UBoxComponent* GetCollisionBox() const {return CollisionBox;}
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
 	void SetItemState(EItemState State);
-	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; };
+	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
 	FORCEINLINE int32 GetItemCount() const { return ItemCount; }
 	FORCEINLINE int32 GetSlotIndex() const { return SlotIndex; }
 	FORCEINLINE void SetSlotIndex(int32 Index) { SlotIndex = Index; }
-	
+	FORCEINLINE void SetCharacterInventoryFull(bool bFull) { bCharacterInventoryFull = bFull; }
+
 	/** Called from the AShooterCharacter class */
 	void StartItemCurve(AShooterCharacter* Char);
 
