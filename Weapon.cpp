@@ -93,6 +93,8 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			SetAmmoIcon(WeaponDataRow->AmmoIcon);
 
 			SetMaterialInstance(WeaponDataRow->MaterialInstance);
+			PreviousMaterialIndex = GetMaterialIndex();
+			GetItemMesh()->SetMaterial(PreviousMaterialIndex, nullptr);
 			SetMaterialIndex(WeaponDataRow->MaterialIndex);
 		}
 		

@@ -118,6 +118,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"))
 	UDataTable* WeaponDataTable;
 
+	int32 PreviousMaterialIndex;
+
 public:
 	/** Adds an impulse to the Weapon */
 	void ThrowWeapon();
