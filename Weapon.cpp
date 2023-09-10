@@ -63,7 +63,7 @@ void AWeapon::StopFalling()
 
 void AWeapon::OnConstruction(const FTransform& Transform)
 {
-	Super::OnConstruction(Transform);
+	//Super::OnConstruction(Transform);
 	const FString WeaponTablePath{ TEXT("DataTable'/Game/_Game/DataTable/WeaponDataTable.WeaponDataTable'") };
 	UDataTable* WeaponTableObject = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *WeaponTablePath));
 
@@ -91,6 +91,18 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			SetItemName(WeaponDataRow->ItemName);
 			SetIconItem(WeaponDataRow->InventoryIcon);
 			SetAmmoIcon(WeaponDataRow->AmmoIcon);
+
+			SetMaterialInstance(WeaponDataRow->MaterialInstance);
+			SetMaterialIndex(WeaponDataRow->MaterialIndex);
+		}
+		
+		if (GetMaterialInstance())
+		{
+			SetDynamicMaterialInstance(UMaterialInstanceDynamic::Create(GetMaterialInstance(), this));
+			GetDynamicMaterialInstance()->SetVectorParameterValue(TEXT("FresnelColor"), GetGlowColor());
+			GetItemMesh()->SetMaterial(GetMaterialIndex(), GetDynamicMaterialInstance());
+			
+			EnableGlowMaterial();
 		}
 	}
 }

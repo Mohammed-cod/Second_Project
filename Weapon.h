@@ -52,6 +52,13 @@ struct FWeaponDataTable : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* AmmoIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMaterialInstance* MaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MaterialIndex;
+
 };
 
 /**
