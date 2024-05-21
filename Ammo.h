@@ -54,7 +54,7 @@ private:
 	/** Overlap sphere for picking up the Ammo */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Ammo, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* AmmoCollisionSphere;
-
+	
 
 public:
 	FORCEINLINE UStaticMeshComponent* GetAmmoMesh() const { return AmmoMesh; }
